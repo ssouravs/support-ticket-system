@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model SupportAgent {
+  agent_id    String   @id @default(uuid())
+  name        String
+  email       String
+  description String
+  active      Boolean
+  dateCreated DateTime @default(now())
+
+  SupportTicket SupportTicket[]
+}
+
+model SupportTicket {
+  ticket_id       String       @id @default(uuid())
+  topic           String
+  ticketCreatedAt DateTime     @default(now())
+  severity        String
+  type            String
+  assignedTo      SupportAgent @relation(fields: [agentID], references: [agent_id])
+  agentID         String
+  status          String?
+  resolvedOn      DateTime?
+}
